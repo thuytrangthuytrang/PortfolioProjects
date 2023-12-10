@@ -46,9 +46,9 @@ order by 1,2
 
   
 --Looking at total cases vs total deaths
+---Shows likelihood of dying if you contract covid in Vietnam---
   
 Select Location, date, total_cases,total_deaths, (total_deaths/total_cases)*100 as DeathPercentage
 from CovidDeaths
----- Shows likelihood of dieing if you contract covid in Vietnam
-where location like'%Viet%'
+where location = 'Vietnam'
 order by 1,2

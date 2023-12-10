@@ -130,3 +130,14 @@ Join CovidVaccinations vac
 where dea.continent is not null and vac.new_vaccinations is not null
 order by 2,3
 
+/****************************************************/
+Select a.continent, a.location, a.date, a.population,
+		b.new_vaccinations,
+		sum(cast (b.new_vaccinations as int)) over 
+			(partition by b.continent, b.location)
+from coviddeaths as a 
+join covidvaccinations as b 
+on a.continent=b.continent and 
+a.location=b.location 
+where b.new_vaccinations is not null
+order by a.continent, a.location, a.date

@@ -31,12 +31,13 @@ where format_date('%Y-%m', created_at) between '2019-01' and '2022-04'
 group by 1
 order by 1
 
- /*--->cả số lượng khách hàng và giá trị đơn hàng trung bình hàng tháng tăng từ 1/2019 - 4/2022
-giá trị đơn hàng lớn nhất là vào 2/2019, giá trị đơn hàng nhỏ nhất là vào 11/2019*/
+/*--> Insight: - Giai đoạn năm 2019 do số lượng người dùng ít khiến giá trị đơn hàng trung bình qua các tháng có tỷ lệ biến động cao.
+               - Giai đoạn từ cuối năm 2019 lượng người dùng ổn định trên 400 và nhìn chung tiếp tục tăng qua các tháng, giá trị đơn hàng trung bình qua các tháng ổn định ở mức ~80-90
+ */
 
 
 
-/******3.Tìm các khách hàng có trẻ tuổi nhất và lớn tuổi nhất theo từng giới tính ( Từ 1/2019-4/2022)*******/
+/*3.Tìm các khách hàng có trẻ tuổi nhất và lớn tuổi nhất theo từng giới tính ( Từ 1/2019-4/2022)*/
 
 
 begin 
@@ -85,8 +86,12 @@ select count(*)
 from pristine-glass-406208._scripta5b2dd14328521efa0282b23b6472a3b9d200b04.young_old
 where tag='oldest'
  
-/*--->tuổi nhỏ nhất là 12 tuổi với  981 người trong đó 467 nữ, 514 nam 
-tuổi lớn nhất là 70 tuổi với 1019 người trong đó 496 nữ, 523 nam */
+  /*  
+  --> Insight: trong giai đoạn Từ 1/2019-4/2022
+      - Giới tính Female: lớn tuổi nhất là 70 tuổi (525 người người dùng); nhỏ tuổi nhất là 12 tuổi (569 người dùng)
+      - Giới tính Male: lớn tuổi nhất là 70 tuổi (529 người người dùng); nhỏ tuổi nhất là 12 tuổi (546 người dùng)
+
+/*
   
 
 /****4. Top 5 sản phẩm mỗi tháng*****/

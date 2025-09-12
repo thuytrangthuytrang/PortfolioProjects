@@ -2,7 +2,7 @@
 Output: month_year ( yyyy-mm) , total_user, total_orde*/
 
 select format_date('%Y-%m', created_at) AS month,
-       count(distinct user_id)  as total_user, count(id) as total_orde
+       count(distinct user_id)  as total_user, count(id) as total_order
 from bigquery-public-data.thelook_ecommerce.order_items
 where status='Complete'and
       format_date('%Y-%m', created_at) between '2019-01' and '2022-04'

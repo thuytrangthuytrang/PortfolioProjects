@@ -9,9 +9,18 @@ where status='Complete'and
 group by 1
 order by 1
 
-/*--->Số lượng đơn hàng và số lượng khách hàng nhìn chung có xu hướng tăng từ 1/2019- 4/2022*/
-  
-/********2. Giá trị đơn hàng trung bình (AOV) và số lượng khách hàng mỗi tháng*******/
+/*--> Insight: 
+    - Nhìn chung số lượng người mua hàng và đơn hàng tiêu thụ đã hoàn thành tăng dần theo mỗi tháng và năm   
+    - Giai đoạn 2019-tháng 1 2022: người mua hàng có xu hướng mua sắm nhiều hơn vào ba tháng cuối năm (10-12) và tháng 1 năm kế tiếp do nhu cầu mua sắm cuối/đầu năm tăng 
+           và nhiều chương trình khuyến mãi/giảm giá cuối năm           
+    - Giai đoạn bốn tháng đầu năm 2022: ghi nhận tỷ lệ lượng người mua tăng mạnh so với ba tháng cuối năm 2021, khả năng do TheLook triển khai chương trình khuyến mãi mới nhằm 
+      kích cầu mua sắm các tháng đầu năm
+    - Tháng 7 2021 ghi nhận lượng mua hàng tăng bất thường, trái ngược với lượng mua giảm sút so với cùng kì năm 2020, có thể do TheLook triển khai campaign đặc biệt cải thiện tình hình 
+      doanh số cho riêng tháng 7.
+*/
+
+
+/*2. Giá trị đơn hàng trung bình (AOV) và số lượng khách hàng mỗi tháng*/
 
 select format_date('%Y-%m', created_at) AS month_year,
        count(distinct user_id) as  distinct_users,

@@ -94,7 +94,7 @@ where tag='oldest'
 /*
   
 
-/****4. Top 5 sản phẩm mỗi tháng*****/
+/*4. Top 5 sản phẩm mỗi tháng*/
 with cte as
 (
   
@@ -147,11 +147,11 @@ with cte as
 ,sum(sale_price) as TPV
 ,count(oi.order_id) as TPO
 ,sum(cost) as Total_cost
-from bigquery-public-data.thelook_ecommerce.orders as o
-inner join bigquery-public-data.thelook_ecommerce.order_items as oi
-on o.order_id = oi.order_id
-inner join bigquery-public-data.thelook_ecommerce.products as p
-on p.id = oi.product_id 
+from bigquery-public-data.thelook_ecommerce.orders as t1
+inner join bigquery-public-data.thelook_ecommerce.order_items as t2
+on t1.order_id = t2.order_id
+inner join bigquery-public-data.thelook_ecommerce.products as t3
+on t2.id = t3.product_id 
 group by 1,2,3
 order by 1,2),
 
@@ -163,15 +163,16 @@ select *
 from cte
 )
 
- select Month,Year,Product_category,TPV,TPO,Total_cost,Total_profit
-,concat(round((next_rev - TPV)/TPV*100.0,2),"%") as Revenue_growth
-,concat(round((next_order - TPO)/TPO*100.0,2),"%") as Order_growth
-,round(Total_profit/Total_cost,2) as Profit_to_cost_ratio 
+select 
+       Month,Year,Product_category,TPV,TPO,Total_cost,Total_profit,
+       concat(round((next_rev - TPV)/TPV*100.0,2),"%") as Revenue_growth,
+       concat(round((next_order - TPO)/TPO*100.0,2),"%") as Order_growth,
+       round(Total_profit/Total_cost,2) as Profit_to_cost_ratio 
 from cte2
 
 
        
-/***2. tỷ lệ số khách hàng quay lại ****/
+/***2. tỷ lệ số khách hàng quay lại ( RETENTION COHORT) ****/
 
 
 with cte as 

@@ -191,7 +191,8 @@ select cohort_date, index, count(distinct user_id) as number_user
 from cte 
 group by cohort_date,index),
 
-cohort as
+--CUSTOMER COHORT-- 
+customer_cohort as
 (
 select cohort_date,
 sum (case when index = 1 then number_user else 0 end) as m1,
@@ -200,14 +201,25 @@ sum (case when index= 3 then number_user else 0 end) as m3,
 sum (case when index= 4 then number_user else 0 end) as m4
 from cte1
 group by cohort_date
-order by cohort_date)
+order by cohort_date),
 
+--RETENTION COHORT--
+retention_cohort as
+(
 select cohort_date,
 round(100.00*m1/m1,2) || '%' as m1,
 round(100.00*m2/m1,2) || '%' as m2,
 round(100.00*m3/m1,2) || '%' as m3,
 round(100.00*m4/m1,2) || '%' as m4,
-from cohort
+from customer_cohort)
+
+--CHURN COHORT--
+Select cohort_month,
+(100.00 - round(100.00* m1/m1,2)) || '%' as m1,
+(100.00 - round(100.00* m2/m1,2)) || '%' as m2,
+(100.00 - round(100.00* m3/m1,2)) || '%' as m3,
+(100.00 - round(100.00* m4/m1,2))|| '%' as m4
+from customer_cohort
 
 
 /*Visualize số khách hàng quay lại trong 1 năm từ 1/2019-1/2020*/
@@ -227,3 +239,13 @@ select cohort_date, index, count(distinct user_id) as number_user
 from cte 
 group by cohort_date,index
 order by cohort_date,index 
+
+/*
+Nhìn chung hằng tháng TheLook ghi nhận số lượng người dùng mới tăng dần đều, thể hiện chiến dịch quảng cáo tiếp cận người dùng
+mới có hiệu quả.
+Tuy nhiên trong giai đoạn 4 tháng đầu tính từ lần mua hàng/sử dụng trang thương mại điện tử TheLook, tỷ lệ người dùng cũ
+quay lại sử dụng trong tháng kế tiếp khá thấp: dao động dưới 10% trong giai đoạn từ 2019-01 đến 2023-07 và tăng lên mức 
+trên 10% trong những tháng còn lại của năm 2023, trong đó cao nhất là tháng đầu tiên sau 2023-10 với 18.28%.
+ --> Tỷ lệ khách hàng trung thành thấp, TheLook nên xem xét cách quảng bá để thiếp lập và tiếp cận nhóm khách hàng trung thành
+nhằm tăng doanh thu từ nhóm này và tiết kiệm các chi phí marketing
+*/

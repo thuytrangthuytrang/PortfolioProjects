@@ -91,7 +91,7 @@ where tag='oldest'
       - Giới tính Female: lớn tuổi nhất là 70 tuổi (525 người người dùng); nhỏ tuổi nhất là 12 tuổi (569 người dùng)
       - Giới tính Male: lớn tuổi nhất là 70 tuổi (529 người người dùng); nhỏ tuổi nhất là 12 tuổi (546 người dùng)
 
-/*
+*/
   
 
 /*4. Top 5 sản phẩm mỗi tháng*/
@@ -139,28 +139,28 @@ order by 1, sum(b.sale_price) desc
 /************PART 2: Tạo retention cohort analysis**********/
 
 
-with cte as
+with ecommerce_cohort as
 (select 
- format_date('%Y-%m', o.created_at) as Month
-,format_date('%Y', o.created_at) as Year
-,p.category as Product_category
-,sum(sale_price) as TPV
-,count(oi.order_id) as TPO
-,sum(cost) as Total_cost
+format_date('%Y-%m', t1.created_at) as Month,
+format_date('%Y', t1.created_at) as Year,
+t3.category as Product_category,
+round(sum(t2.sale_price),2) as TPV,
+count(t2.order_id) as TPO,
+round(sum(t3.cost),2) as Total_cost
 from bigquery-public-data.thelook_ecommerce.orders as t1
-inner join bigquery-public-data.thelook_ecommerce.order_items as t2
+join bigquery-public-data.thelook_ecommerce.order_items as t2
 on t1.order_id = t2.order_id
-inner join bigquery-public-data.thelook_ecommerce.products as t3
-on t2.id = t3.product_id 
+join bigquery-public-data.thelook_ecommerce.products as t3
+on t2.id = t3.id 
 group by 1,2,3
 order by 1,2),
 
-cte2 as(
-select *
-,lag(TPV) over(partition by Month order by Month) as next_rev
-,lag(TPO) over(partition by Month order by Month) as next_order
-,TPV-TPO as Total_profit
-from cte
+cte as(
+select *,
+lag(TPV) over(partition by Month order by Month) as next_rev,
+lag(TPO) over(partition by Month order by Month) as next_order,
+TPV-TPO as Total_profit
+from ecommerce_cohort
 )
 
 select 
@@ -168,16 +168,16 @@ select
        concat(round((next_rev - TPV)/TPV*100.0,2),"%") as Revenue_growth,
        concat(round((next_order - TPO)/TPO*100.0,2),"%") as Order_growth,
        round(Total_profit/Total_cost,2) as Profit_to_cost_ratio 
-from cte2
+from cte
 
 
        
 /***2. tỷ lệ số khách hàng quay lại ( RETENTION COHORT) ****/
 
 
-with cte as 
+with cte1 as 
 (
-select format_date('%Y-%m',first) as cohort_date,date, (extract(year from date)-extract(year from first))*12+
+select format_date('%Y-%m',first) as cohort_month,date, (extract(year from date)-extract(year from first))*12+
 (extract(month from date)-extract(month from first))+1 as index,user_id
 from
 (
@@ -186,27 +186,27 @@ min(created_at) over(partition by user_id) as first
 from  bigquery-public-data.thelook_ecommerce.order_items
 where created_at between '2019-01-06'and '2021-01-31')),
 
-cte1 as (
-select cohort_date, index, count(distinct user_id) as number_user
-from cte 
-group by cohort_date,index),
+cte2 as (
+select cohort_month, index, count(distinct user_id) as number_user
+from cte1
+group by cohort_month,index),
 
 --CUSTOMER COHORT-- 
 customer_cohort as
 (
-select cohort_date,
+select cohort_month,
 sum (case when index = 1 then number_user else 0 end) as m1,
 sum (case when index= 2 then number_user else 0 end) as m2,
 sum (case when index= 3 then number_user else 0 end) as m3,
 sum (case when index= 4 then number_user else 0 end) as m4
-from cte1
-group by cohort_date
-order by cohort_date),
+from cte2
+group by cohort_month
+order by cohort_month),
 
 --RETENTION COHORT--
 retention_cohort as
 (
-select cohort_date,
+select cohort_month,
 round(100.00*m1/m1,2) || '%' as m1,
 round(100.00*m2/m1,2) || '%' as m2,
 round(100.00*m3/m1,2) || '%' as m3,
@@ -224,9 +224,9 @@ from customer_cohort
 
 /*Visualize số khách hàng quay lại trong 1 năm từ 1/2019-1/2020*/
 
-with cte as 
+with cte4 as 
 (
-select format_date('%Y-%m',first) as cohort_date,date, (extract(year from date)-extract(year from first))*12+
+select format_date('%Y-%m',first) as cohort_month,date, (extract(year from date)-extract(year from first))*12+
 (extract(month from date)-extract(month from first))+1 as index,user_id
 from
 (
@@ -235,10 +235,10 @@ min(created_at) over(partition by user_id) as first
 from  bigquery-public-data.thelook_ecommerce.order_items
 where created_at between '2019-01-06'and '2020-01-31'))
 
-select cohort_date, index, count(distinct user_id) as number_user
+select cohort_month, index, count(distinct user_id) as number_user
 from cte 
-group by cohort_date,index
-order by cohort_date,index 
+group by cohort_month,index
+order by cohort_month,index 
 
 /*
 Nhìn chung hằng tháng TheLook ghi nhận số lượng người dùng mới tăng dần đều, thể hiện chiến dịch quảng cáo tiếp cận người dùng

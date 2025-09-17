@@ -240,11 +240,18 @@ from cte
 group by cohort_month,index
 order by cohort_month,index 
 
-/*
-Hằng tháng TheLook ghi nhận số lượng người dùng mới tăng dần đều, thể hiện chiến dịch quảng cáo tiếp cận người dùng mới có hiệu quả.
-Tuy nhiên trong giai đoạn 4 tháng đầu tính từ lần mua hàng/sử dụng trang thương mại điện tử TheLook, tỷ lệ người dùng cũ
-quay lại sử dụng trong tháng kế tiếp khá thấp: dao động dưới 10% trong giai đoạn từ 2019-01 đến 2023-07 và tăng lên mức 
-trên 10% trong những tháng còn lại của năm 2023, trong đó cao nhất là tháng đầu tiên sau 2023-10 với 18.28%.
- --> Tỷ lệ khách hàng trung thành thấp, TheLook nên xem xét cách quảng bá để thiếp lập và tiếp cận nhóm khách hàng trung thành
-nhằm tăng doanh thu từ nhóm này và tiết kiệm các chi phí marketing
-*/
+
+/*Retention cohort
+- Số lượng người dùng mới hàng tháng tăng đều đặn → chiến dịch thu hút khách mới hiệu quả.
+- Tuy nhiên: tỷ lệ khách quay lại (retention) trong 4 tháng đầu sau lần mua đầu tiên rất thấp (<10%) trong giai đoạn 2019–07/2023.
+- Sau 10/2023, tỷ lệ retention tăng lên ~18% ở tháng tiếp theo.
+→ Khách hàng trung thành của TheLook còn ít, doanh nghiệp vẫn chủ yếu dựa vào việc mua mới thay vì giữ chân.
+
+Churn cohort
+- Ngược lại, tỷ lệ rời bỏ (churn) cao trong những tháng đầu → cho thấy trải nghiệm khách hàng sau mua có thể chưa tốt hoặc thiếu chương trình giữ chân.
+
+Kết luận & khuyến nghị
+- Khách hàng mới: tăng đều qua từng năm → hiệu quả từ hoạt động quảng cáo và khuyến mãi.
+- Khách hàng cũ: tỷ lệ quay lại thấp, chỉ cải thiện rõ rệt từ cuối 2023 → cần đầu tư nhiều hơn vào CRM, loyalty program, email marketing, voucher cá nhân hóa.
+- Doanh thu & AOV: ổn định sau năm 2019 → có thể tập trung mở rộng tệp khách hàng hoặc upsell/cross-sell.
+- Sản phẩm chủ lực: cần được duy trì, quảng bá mạnh hơn và tận dụng để kéo người dùng mới. */

@@ -72,7 +72,7 @@ where ranking=1
 
 
 /***5) Ai là khách hàng tốt nhất, phân tích dựa vào RFM 
-(sử dụng lại bảng customer_segment ở buổi học 23)***/
+(sử dụng lại bảng customer_segment)***/
 
 /** tính RFM*/
 with rfm as

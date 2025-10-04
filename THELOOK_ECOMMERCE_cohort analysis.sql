@@ -169,7 +169,7 @@ select
        concat(round((next_order - TPO)/TPO*100.0,2),"%") as Order_growth,
        round(Total_profit/Total_cost,2) as Profit_to_cost_ratio 
 from cte
-
+Order by Product_category, Year, Month
 
        
 /***2. tỷ lệ số khách hàng quay lại ( RETENTION COHORT) ****/
